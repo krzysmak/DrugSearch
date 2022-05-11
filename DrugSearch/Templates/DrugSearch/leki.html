@@ -1,0 +1,19 @@
+{% extends "DrugSearch/home.html" %}
+
+{% block leki %}
+
+{% for lek in leki %}
+<tr>
+    <th>
+        <div>
+            {% for LP_elem in LP %}
+            <div>
+                {{LP_elem}}
+            </div>
+            {% endfor %}
+        </div>
+    </th>
+</tr>
+{% endfor %}
+
+{% endblock leki %}
