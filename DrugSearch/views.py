@@ -8,6 +8,7 @@ from .models import Lek, SzczegolyRefundacji
 from django.http import JsonResponse
 from django.core import serializers
 from rest_framework.renderers import JSONRenderer
+from itertools import chain
 
 from .serializers import LekSerializer
 
@@ -15,26 +16,25 @@ current_results = {}
 
 
 def home(request):
+        leki = Lek.objects.all()[:10]
+        print(leki.count())
         context = {
             'query': '',
-            'query_result': Lek.objects.all()[:100]
+            'query_result': leki
         }
         global current_results
         current_results = context
         return render(request, 'DrugSearch/leki.html', context)
 
 
+
 def search_results(request):
     print("In search result")
     search_vec = SearchVector("nazwa_leku", "substancja_czynna", "postac", "dawka_leku", "zawartosc_opakowania", "identyfikator_leku")
-    print(request)
-    data = request.GET.get('query')
-    print("DATA " + data)
-    query = data
+    query = request.GET.get('query')
     if request.method == 'GET':
         print("request method to GET")
         query_result = Lek.objects.annotate(search=search_vec).filter(search=query)
-        # query_result = Lek.objects.all().values()
         serialized_query = LekSerializer(query_result, many='True').data
         context = {
             'query': query,

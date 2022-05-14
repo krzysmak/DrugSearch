@@ -330,18 +330,18 @@
                 alert("UDAŁO SIĘ")
                 let resultDiv = document.getElementById("responseFetch");
                 let data = response['query_result'];
-                console.log(data);
-                var table = document.getElementById('resultTable');
-                table.innerHTML = "";
+                var first = data[0];
+                console.log(first);
+                var table = document.getElementById('resultTable').getElementsByTagName('tbody')[0];
                 for (i in data) {
                     x = data[i];
                     let tr = document.createElement('tr');
-                    tr.innerHTML = '<td>' + x['nazwa_leku'] + '</td>' +
-                        '<td>' + x['substancja_czynna'] + '</td>' +
-                        '<td>' + x['postac'] + '</td>' +
-                        '<td>' + x['dawka_leku'] + '</td>' +
-                    '<td>' + x['zawartosc_opakowania'] + '</td>' +
-                    '<td>' + x['identyfikator_leku'] + '</td>';
+                    tr.innerHTML = '<td>' + x.nazwa_leku + '</td>' +
+                        '<td>' + x.substancja_czynna + '</td>' +
+                        '<td>' + x.postac + '</td>' +
+                        '<td>' + x.dawka_leku + '</td>' +
+                    '<td>' + x.zawartosc_opakowania + '</td>' +
+                    '<td>' + x.identyfikator_leku + '</td>';
                     table.appendChild(tr);
                 }
             },
