@@ -26,10 +26,6 @@ start_index = 0
 
 def home(request):
     print(request)
-    # global start_index
-    # leki = Lek.objects.all()[:offset]
-    # start_index += offset
-    # print(leki.count())
     context = {
         'query': '',
         'query_result': {}
@@ -56,7 +52,6 @@ def load_initial_data(request):
             'query_result': query_result
         }
         return JsonResponse(context, safe=False)
-
 
 
 def search_results(request):
@@ -123,7 +118,7 @@ def sort_results(request):
             return render(request, 'DrugSearch/leki.html', context)
 
 
-def getMoreResults(request):
+def get_more_results(request):
     query = request.GET.get('query')
     global start_index
     result = Lek.objects.all()[start_index:offset]
