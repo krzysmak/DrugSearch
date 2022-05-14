@@ -1,6 +1,7 @@
 import json
 
 from django.contrib.postgres.search import SearchVector
+from django.core.handlers.wsgi import WSGIRequest
 from django.db.models import QuerySet
 from django.db.models.functions import Coalesce
 from django.shortcuts import render
@@ -23,8 +24,11 @@ offset = 100
 
 start_index = 0
 
+last_request: WSGIRequest
 
 def home(request):
+    global last_request
+    last_request = request
     print(request)
     context = {
         'query': '',
@@ -34,6 +38,8 @@ def home(request):
 
 
 def load_initial_data(request):
+    global last_request
+    last_request = request
     print(request)
     print("load_initial_data")
     query = ""
@@ -55,13 +61,18 @@ def load_initial_data(request):
 
 
 def search_results(request):
+    global last_request
+    last_request = request
     print("In search result")
     search_vec = SearchVector("nazwa_leku", "substancja_czynna", "postac", "dawka_leku", "zawartosc_opakowania",
-                              "identyfikator_leku")
+                              "identyfikator_leku", "refundacje__zakres_wskazan",
+                              "refundacje__zakres_wskazan_pozarejestracyjnych",
+                              "refundacje__poziom_odplatnosci", "refundacje__wysokosc_doplaty")
     query = request.GET.get('query')
     if request.method == 'GET':
-        query_result = Lek.objects.annotate(search=search_vec).filter(search=query)  # filter the database
+        query_result = Lek.objects.annotate(search=search_vec).filter(search__icontains=query)[:offset]  # filter the database
         serialized_query = LekSerializer(query_result, many='True').data
+        print(serialized_query)
         context = {  # create context for JSON response
             'query': query,
             'query_result': serialized_query
@@ -88,34 +99,35 @@ def search_results(request):
 
 
 def sort_results(request):
+    global last_request
+    last_request = request
+    search_vec = SearchVector("nazwa_leku", "substancja_czynna", "postac", "dawka_leku", "zawartosc_opakowania",
+                              "identyfikator_leku", "refundacje__zakres_wskazan",
+                              "refundacje__zakres_wskazan_pozarejestracyjnych",
+                              "refundacje__poziom_odplatnosci", "refundacje__wysokosc_doplaty")
+    print("sorting")
+    print(request)
     sort_by_key = request.GET.get("sort_by")
     sort_by_dir = request.GET.get("sort_direction")
     query = request.GET.get("query")
     if request.method == 'GET':
-        global current_results
-        if 'query_result' in current_results:
-            sorted_results = current_results['query_result']
+        if query == "":
             if sort_by_dir == 'descending':
-                sorted_results.order_by(Coalesce(sort_by_key).desc())
+                sorted_results = Lek.objects.all().order_by('-'+sort_by_key)[:offset]
             else:
-                sorted_results.order_by(sort_by_key)
-
-            serialized_query = LekSerializer(sorted_results, many='True').data
-            context = {  # create context for JSON response
-                'query': query,
-                'query_result': serialized_query
-            }
-            current_results = {
-                'query': query,
-                'query_result': sorted_results
-            }
-            return JsonResponse(context, safe=False)
+                sorted_results = Lek.objects.all().order_by(sort_by_key)[:offset]
         else:
-            context = {
-                'query': '',
-                'query_result': {}
-            }
-            return render(request, 'DrugSearch/leki.html', context)
+            if sort_by_dir == 'descending':
+                sorted_results = Lek.objects.annotate(search=search_vec).filter(search__icontains=query).order_by('-'+sort_by_key)[:offset]  # filter the database
+            else:
+                sorted_results = Lek.objects.annotate(search=search_vec).filter(search__icontains=query).order_by(sort_by_key)[:offset]  # filter the database
+
+        serialized_query = LekSerializer(sorted_results, many='True').data
+        context = {  # create context for JSON response
+            'query': query,
+            'query_result': serialized_query
+        }
+        return JsonResponse(context, safe=False)
 
 
 def get_more_results(request):

@@ -20,9 +20,7 @@ def run():
     #
     #     for row in reader:
     #         print(row)
-    #         # genre, _ = Genre.objects.get_or_create(name=row[-1])
     #         s = row[4]
-    #         # lek_dodaj = Lek.objects.get(identyfikator_leku=row[0])
     #         doplata = 0
     #         if s:
     #             doplata = decimal.Decimal(s)
@@ -59,9 +57,13 @@ def run():
 
     leki = Lek.objects.all()
 
+    szczegoly = SzczegolyRefundacji.objects.all()
+    print(len(szczegoly))
+
     # for lek in leki:
     #     print(lek)
     #     refunds = SzczegolyRefundacji.objects.filter(identyfikator_leku=lek.identyfikator_leku)
+    #     print(refunds)
     #     for refun in refunds:
     #         print(refun)
     #         lek.refundacje.add(refun)

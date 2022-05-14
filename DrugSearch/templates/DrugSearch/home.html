@@ -32,19 +32,19 @@
                 </th>
                 <th>
                     <div class="nazwa_kolumny">
-                        <p class="tytul_kolumny">Substancja czynna</p>
+                        <p class="tytul_kolumny">Nazwa</p>
                         <div class="triangles">
-                            <input id="substancja_czynna" class="button_triangle_up" type="image" src="{% static 'DrugSearch/trojkat1.png' %}">
-                            <input id="substancja_czynna" class="button_triangle_down" type="image" src="{% static 'DrugSearch/trojkat2.png' %}">
+                            <input id="nazwa_leku" class="button_triangle_up" type="image" src="{% static 'DrugSearch/trojkat1.png' %}">
+                            <input id="nazwa_leku" class="button_triangle_down" type="image" src="{% static 'DrugSearch/trojkat2.png' %}">
                         </div>
                     </div>
                 </th>
                 <th>
                     <div class="nazwa_kolumny">
-                        <p class="tytul_kolumny">Nazwa</p>
+                        <p class="tytul_kolumny">Substancja czynna</p>
                         <div class="triangles">
-                            <input id="nazwa_leku" class="button_triangle_up" type="image" src="{% static 'DrugSearch/trojkat1.png' %}">
-                            <input id="nazwa_leku" class="button_triangle_down" type="image" src="{% static 'DrugSearch/trojkat2.png' %}">
+                            <input id="substancja_czynna" class="button_triangle_up" type="image" src="{% static 'DrugSearch/trojkat1.png' %}">
+                            <input id="substancja_czynna" class="button_triangle_down" type="image" src="{% static 'DrugSearch/trojkat2.png' %}">
                         </div>
                     </div>
                 </th>
@@ -201,7 +201,7 @@
                     url: "/sort_results/",
                     data: {
                         query: queryString,
-                        sort_direction: (button_type == 'button_triangle_up' ? 'descending' : 'ascending'),
+                        sort_direction: (button_type == 'button_triangle_up' ? 'ascending' : 'descending'),
                         sort_by: event.target.id
                     },
                     success: function (response) {
@@ -209,7 +209,7 @@
                         let resultDiv = document.getElementById("responseFetch");
                         let data = response['query_result'];
                         console.log(data);
-                        var table = document.getElementById('resultTable');
+                        var table = document.getElementById('resultTable').getElementsByTagName('tbody')[0];
                         table.innerHTML = "";
                         for (i in data) {
                             let x = data[i];
@@ -232,7 +232,6 @@
             url: "/load_initial_data/",
             success: function (response) {
                 alert("UDAŁO SIĘ")
-                let resultDiv = document.getElementById("responseFetch");
                 let data = response['query_result'];
                 var first = data[0];
                 console.log(first);
