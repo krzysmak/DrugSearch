@@ -3,7 +3,7 @@
 {% load static %}
 
 {% block content %}
-
+<div class="start">
 <h2 class="naglowek">Wyszukiwarka leków refundowanych</h2>
 
 <p class="instrukcja">
@@ -12,121 +12,124 @@
     Kliknięcie "szukaj" zaktualizuje wyświetlaną tabelę.
     Przyciśnięcie strzałek przy nazwach kolumn umożliwa zmianę uporządkowania wierszy tabeli
 </p>
-    <form class="form" action="/search_results/" method="GET" id="searchForm">
-    <input id="searchInput" type="text" class="form_input" name="query" value={{ query }}>
-    <input type="submit" class="form_submit" value="szukaj">
-    </form>
-
-    <div id="responseFetch">
+<form class="form" action="/search_results/" method="GET" id="searchForm">
+<input id="searchInput" type="text" class="form_input" name="query" value={{ query }}>
+<input type="submit" class="form_submit" value="szukaj">
+</form>
+</div>
+<div id="responseFetch">
     <table class="table" id="resultTable" onload="load_initial_data();">
         <thead>
             <tr class="kolumny">
-                <th>
+                <th id="id1">
                     <div class="nazwa_kolumny">
                         <p class="tytul_kolumny">LP</p>
                         <div class="triangles">
-                            <input class="button_triangle_up" type="image" src="{% static 'DrugSearch/trojkat1.png' %}">
-                            <input class="button_triangle_down" type="image" src="{% static 'DrugSearch/trojkat2.png' %}">
+                            <input id="id" class="button_triangle_up" type="image" src="{% static 'DrugSearch/trojkat1.png' %}">
+                            <input id="id" class="button_triangle_down" type="image" src="{% static 'DrugSearch/trojkat2.png' %}">
                         </div>
                     </div>
                 </th>
-                <th>
-                    <div class="nazwa_kolumny">
-                        <p class="tytul_kolumny">Substancja czynna</p>
-                        <div class="triangles">
-                            <input class="button_triangle_up" type="image" src="{% static 'DrugSearch/trojkat1.png' %}">
-                            <input class="button_triangle_down" type="image" src="{% static 'DrugSearch/trojkat2.png' %}">
-                        </div>
-                    </div>
-                </th>
-                <th>
+                <th id="id2">
                     <div class="nazwa_kolumny">
                         <p class="tytul_kolumny">Nazwa</p>
                         <div class="triangles">
-                            <input class="button_triangle_up" type="image" src="{% static 'DrugSearch/trojkat1.png' %}">
-                            <input class="button_triangle_down" type="image" src="{% static 'DrugSearch/trojkat2.png' %}">
+                            <input id="nazwa_leku" class="button_triangle_up" type="image" src="{% static 'DrugSearch/trojkat1.png' %}">
+                            <input id="nazwa_leku" class="button_triangle_down" type="image" src="{% static 'DrugSearch/trojkat2.png' %}">
                         </div>
                     </div>
                 </th>
-                <th>
+                <th id="id3">
+                    <div class="nazwa_kolumny">
+                        <p class="tytul_kolumny">Substancja czynna</p>
+                        <div class="triangles">
+                            <input id="substancja_czynna" class="button_triangle_up" type="image" src="{% static 'DrugSearch/trojkat1.png' %}">
+                            <input id="substancja_czynna" class="button_triangle_down" type="image" src="{% static 'DrugSearch/trojkat2.png' %}">
+                        </div>
+                    </div>
+                </th>
+                <th id="id4">
                     <div class="nazwa_kolumny">
                         <p class="tytul_kolumny">Postać</p>
                         <div class="triangles">
-                            <input class="button_triangle_up" type="image" src="{% static 'DrugSearch/trojkat1.png' %}">
-                            <input class="button_triangle_down" type="image" src="{% static 'DrugSearch/trojkat2.png' %}">
+                            <input id="postac" class="button_triangle_up" type="image" src="{% static 'DrugSearch/trojkat1.png' %}">
+                            <input id="postac" class="button_triangle_down" type="image" src="{% static 'DrugSearch/trojkat2.png' %}">
                         </div>
                     </div>
                 </th>
-                <th>
+                <th id="id5">
                     <div class="nazwa_kolumny">
                         <p class="tytul_kolumny">Dawka</p>
                         <div class="triangles">
-                            <input class="button_triangle_up" type="image" src="{% static 'DrugSearch/trojkat1.png' %}">
-                            <input class="button_triangle_down" type="image" src="{% static 'DrugSearch/trojkat2.png' %}">
+                            <input id="dawka_leku" class="button_triangle_up" type="image" src="{% static 'DrugSearch/trojkat1.png' %}">
+                            <input id="dawka_leku" class="button_triangle_down" type="image" src="{% static 'DrugSearch/trojkat2.png' %}">
                         </div>
                     </div>
                 </th>
-                <th>
+                <th id="id6">
                     <div class="nazwa_kolumny">
                         <p class="tytul_kolumny">Zawartość opakowania</p>
                         <div class="triangles">
-                            <input class="button_triangle_up" type="image" src="{% static 'DrugSearch/trojkat1.png' %}">
-                            <input class="button_triangle_down" type="image" src="{% static 'DrugSearch/trojkat2.png' %}">
+                            <input id="zawartosc_opakowania" class="button_triangle_up" type="image" src="{% static 'DrugSearch/trojkat1.png' %}">
+                            <input id="zawartosc_opakowania" class="button_triangle_down" type="image" src="{% static 'DrugSearch/trojkat2.png' %}">
                         </div>
                     </div>
                 </th>
-                <th>
+                <th id="id7">
                     <div class="nazwa_kolumny">
                         <p class="tytul_kolumny">Numer GITN lub inny kod jednoznacznie identyfikujący produkt</p>
                         <div class="triangles">
-                            <input class="button_triangle_up" type="image" src="{% static 'DrugSearch/trojkat1.png' %}">
-                            <input class="button_triangle_down" type="image" src="{% static 'DrugSearch/trojkat2.png' %}">
+                            <input id="identyfikator_leku" class="button_triangle_up" type="image" src="{% static 'DrugSearch/trojkat1.png' %}">
+                            <input id="identyfikator_leku" class="button_triangle_down" type="image" src="{% static 'DrugSearch/trojkat2.png' %}">
                         </div>
                     </div>
                 </th>
-                <th>
+                <th id="id8">
                     <div class="nazwa_kolumny">
                         <p class="tytul_kolumny">Zakres wskazań objętych refundacją</p>
                         <div class="triangles">
-                            <input class="button_triangle_up" type="image" src="{% static 'DrugSearch/trojkat1.png' %}">
-                            <input class="button_triangle_down" type="image" src="{% static 'DrugSearch/trojkat2.png' %}">
+                            <input id="zakres_wskazan" class="button_triangle_up" type="image" src="{% static 'DrugSearch/trojkat1.png' %}">
+                            <input id="zakres_wskazan" class="button_triangle_down" type="image" src="{% static 'DrugSearch/trojkat2.png' %}">
                         </div>
                     </div>
                 </th>
-                <th>
+                <th id="id9">
                     <div class="nazwa_kolumny">
                         <p class="tytul_kolumny">Zakres wskazań pozarejestracyjnych objętych refundacją</p>
                         <div class="triangles">
-                            <input class="button_triangle_up" type="image" src="{% static 'DrugSearch/trojkat1.png' %}">
-                            <input class="button_triangle_down" type="image" src="{% static 'DrugSearch/trojkat2.png' %}">
+                            <input id="zakres_wskazan_pozarejestracyjnych" class="button_triangle_up" type="image" src="{% static 'DrugSearch/trojkat1.png' %}">
+                            <input id="zakres_wskazan_pozarejestracyjnych" class="button_triangle_down" type="image" src="{% static 'DrugSearch/trojkat2.png' %}">
                         </div>
                     </div>
                 </th>
-                <th>
+                <th id="id10">
                     <div class="nazwa_kolumny">
                         <p class="tytul_kolumny">Poziom odpłatności</p>
                         <div class="triangles">
-                            <input class="button_triangle_up" type="image" src="{% static 'DrugSearch/trojkat1.png' %}">
-                            <input class="button_triangle_down" type="image" src="{% static 'DrugSearch/trojkat2.png' %}">
+                            <input id="poziom_odplatnosci" class="button_triangle_up" type="image" src="{% static 'DrugSearch/trojkat1.png' %}">
+                            <input id="poziom_odplatnosci" class="button_triangle_down" type="image" src="{% static 'DrugSearch/trojkat2.png' %}">
                         </div>
                     </div>
                 </th>
-                <th>
+                <th id="id11">
                     <div class="nazwa_kolumny">
                         <p class="tytul_kolumny">Wysokość dopłaty świadczeniobiorcy</p>
                         <div class="triangles">
-                            <input class="button_triangle_up" type="image" src="{% static 'DrugSearch/trojkat1.png' %}">
-                            <input class="button_triangle_down" type="image" src="{% static 'DrugSearch/trojkat2.png' %}">
+                            <input id="wysokosc_doplaty" class="button_triangle_up" type="image" src="{% static 'DrugSearch/trojkat1.png' %}">
+                            <input id="wysokosc_doplaty" class="button_triangle_down" type="image" src="{% static 'DrugSearch/trojkat2.png' %}">
                         </div>
                     </div>
                 </th>
             </tr>
         </thead>
         <tbody>
-
         </tbody>
     </table>
-    </div>
+</div>
+<div class="guziki">
+    <button class="guzik">pokaż więcej wierszy</button>
+    <button class="guzik">pokaż wszystkie wiersze</button>
+</div>
 
 
 {% endblock content %}
@@ -134,6 +137,50 @@
 {% block scripts %}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
     <script type="text/javascript">
+    
+    function addResults(x, table) {
+        let index = 1;
+        let tr = document.createElement('tr');
+        let id = document.createElement(`td`);
+        id.setAttribute("id", `id${index}`);
+        id.setAttribute("class", "ref");
+        index += 1;
+        /*
+        for (let refundacja of x.refundacje) {
+            let id_row = document.createElement('div');
+            id_row.setAttribute("class", "id_row");
+            id_row.innerText = x.id;
+            id.appendChild(id_row);
+        }
+        */
+        id.innerText = x.id;
+        tr.appendChild(id);
+        for (let elem of ['nazwa_leku', 'substancja_czynna', 'postac', 'dawka_leku', 'zawartosc_opakowania', 'identyfikator_leku']) {
+            let td = document.createElement(`td`);
+            td.setAttribute("id", `id${index}`);
+            index += 1;
+            td.innerText = x[`${elem}`];
+            tr.appendChild(td);
+        }
+        for (let elem of ['zakres_wskazan', 'zakres_wskazan_pozarejestracyjnych', 'poziom_odplatnosci', 'wysokosc_doplaty']) {
+            let td = document.createElement(`td`);
+            td.setAttribute("id", `id${index}`);
+            td.setAttribute("class", "ref");
+            index += 1;
+            for (let refundacja of x.refundacje) {
+                let elem_row = document.createElement('div');
+                elem_row.setAttribute("class", "id_row");
+                elem_row.innerText = refundacja[`${elem}`];
+                if (!elem_row.innerText) {
+                    elem_row.innerText = "\n\n\n";
+                }
+                td.appendChild(elem_row);
+            }
+            tr.appendChild(td);
+        }
+        table.appendChild(tr);
+    }
+
     document.getElementById("searchForm").addEventListener("submit", x => {
         let queryString = document.getElementById("searchInput").value;
         x.preventDefault();
@@ -150,16 +197,10 @@
                 var first = data[0];
                 console.log(first);
                 var table = document.getElementById('resultTable').getElementsByTagName('tbody')[0];
+                table.innerHTML = "";
                 for (i in data) {
                     x = data[i];
-                    let tr = document.createElement('tr');
-                    tr.innerHTML = '<td>' + x.nazwa_leku + '</td>' +
-                        '<td>' + x.substancja_czynna + '</td>' +
-                        '<td>' + x.postac + '</td>' +
-                        '<td>' + x.dawka_leku + '</td>' +
-                    '<td>' + x.zawartosc_opakowania + '</td>' +
-                    '<td>' + x.identyfikator_leku + '</td>';
-                    table.appendChild(tr);
+                    addResults(x, table);
                 }
             },
             error: function (response) {
@@ -168,6 +209,41 @@
             }
         })
     })
+
+    for (let button_type of ['button_triangle_up', 'button_triangle_down']) {
+        let buttons = document.getElementsByClassName(`${button_type}`);
+        for (button of buttons) {
+            button.addEventListener("click", event => {
+                let queryString = document.getElementById("searchInput").value;
+                event.preventDefault();
+                $.ajax({
+                    type: 'GET',
+                    url: "/sort_results/",
+                    data: {
+                        query: queryString,
+                        sort_direction: (button_type == 'button_triangle_up' ? 'ascending' : 'descending'),
+                        sort_by: event.target.id
+                    },
+                    success: function (response) {
+                        alert("UDAŁO SIĘ")
+                        let resultDiv = document.getElementById("responseFetch");
+                        let data = response['query_result'];
+                        console.log(data);
+                        var table = document.getElementById('resultTable').getElementsByTagName('tbody')[0];
+                        table.innerHTML = "";
+                        for (i in data) {
+                            let x = data[i];
+                            addResults(x, table);
+                        }
+                    },
+                    error: function (response) {
+                        alert("NIE UDALO SIE")
+                        console.log('ERROR')
+                    }
+                })    
+            })
+        }
+    }
     </script>
     <script type="text/javascript">
         document.addEventListener("DOMContentLoaded", function(x) {
@@ -176,28 +252,20 @@
             url: "/load_initial_data/",
             success: function (response) {
                 alert("UDAŁO SIĘ")
-                let resultDiv = document.getElementById("responseFetch");
                 let data = response['query_result'];
                 var first = data[0];
                 console.log(first);
                 var table = document.getElementById('resultTable').getElementsByTagName('tbody')[0];
                 for (i in data) {
                     x = data[i];
-                    let tr = document.createElement('tr');
-                    tr.innerHTML = '<td>' + x.nazwa_leku + '</td>' +
-                        '<td>' + x.substancja_czynna + '</td>' +
-                        '<td>' + x.postac + '</td>' +
-                        '<td>' + x.dawka_leku + '</td>' +
-                    '<td>' + x.zawartosc_opakowania + '</td>' +
-                    '<td>' + x.identyfikator_leku + '</td>';
-                    table.appendChild(tr);
+                    addResults(x, table);
                 }
             },
             error: function (response) {
                 alert("NIE UDALO SIE")
                 console.log('ERROR')
             }
-        })
+            })
         })
     </script>
 {% endblock %}
