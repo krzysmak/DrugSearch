@@ -1,12 +1,36 @@
+#responseFetch {
+    height: 70vh;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.table {
+    table-layout: fixed;
+    width: 100%;
+}
+
 .table tbody {
-    display: block;
-    overflow-y: auto;
+   /* display: block;*/
+    overflow-y: scroll;
     height: 50vh;
     width: 100%;
 }
-  
-.table thead tr {
-    display:block;
+/*
+.start {
+    max-width: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-flow: row wrap;
+    row-gap: 5px;
+    background-color: white;
+    position: fixed;
+}
+*/
+
+.table thead {
+    /*position: fixed;*/
+/*    display:block;*/
 }
 
 .table thead th {
@@ -14,8 +38,12 @@
 }
 
 .table th, .table td {
+    overflow: hidden;
     padding-top: 0%;
     padding-bottom: 0%;
+    vertical-align: middle;
+    text-align: center;
+    font-size: smaller;
 }
 
 .container {
@@ -24,7 +52,7 @@
     display: flex;
     justify-content: center;
     flex-flow: row wrap;
-    row-gap: 20px;
+    row-gap: 5px;
 }
 
 .naglowek {
@@ -62,6 +90,10 @@
 .tabela {
     max-width: 100%;
     width: 100%;
+}
+
+.ref {
+    text-align: center;
 }
 
 .kolumny {
@@ -106,4 +138,58 @@
     grid-area: down;
     align-self: flex-start;
     max-width: 10px;
+}
+
+#id1 {
+    width: 3%;
+}
+
+#id2 {
+    width: 9%;
+}
+
+#id3 {
+    width: 9%;
+}
+
+#id4 {
+    width: 9%;
+}
+
+#id5 {
+    width: 5%;
+}
+
+#id6 {
+    width: 7%;
+}
+
+#id7 {
+    width: 11%;
+}
+
+#id8 {
+    width: 15%;
+}
+
+#id9 {
+    width: 9%;
+}
+
+#id10 {
+    width: 7%;
+}
+
+#id11 {
+    width: 8.5%;
+}
+
+.guzik {
+    background-color: blue;
+    color: white;
+}
+
+.id_row {
+    padding-bottom: 15px;
+    padding-top: 15px;
 }
