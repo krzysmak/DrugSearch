@@ -1,6 +1,6 @@
 # DrugSearch
 
-To run: [w folderze z menage.py] <br/>
+To run: [w folderze z manage.py] <br/>
 python3 -m venv .venv <br/>
 source .venv/bin/activate <br/>
 python -m pip install django <br/>
