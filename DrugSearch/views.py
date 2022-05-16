@@ -42,6 +42,10 @@ def reset_offset():
     offset = 100
     start_index = 0
 
+def set_max_offset():
+    global offset
+    offset = 6000
+
 
 def home(request):
     global last_request
@@ -70,6 +74,7 @@ def load_initial_data(request):
             'query': query,
             'query_result': serialized_query
         }
+        print("REURNED LOAD INITIAL DATA")
         return JsonResponse(context, safe=False)
 
 
@@ -157,7 +162,13 @@ def sort_results(request):
 
 def get_more_results(request):
     print(last_request)
-    update_offset()
+    query = request.GET.get('load_all')
+    if query:
+        update_offset()
+        set_max_offset()
+        print("LOAD_ALL_ELEMENTS")
+    else:
+        update_offset()
     if last_request.path == "/load_initial_data/":
         print("get more after load initial data")
         return load_initial_data(request)
@@ -168,3 +179,5 @@ def get_more_results(request):
         print("get more after search_results")
         return search_results(request)
     return JsonResponse({}, safe=False)
+
+
