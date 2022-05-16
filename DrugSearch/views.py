@@ -26,6 +26,23 @@ start_index = 0
 
 last_request: WSGIRequest
 
+sort_request: WSGIRequest
+
+is_sorted: bool
+
+
+def update_offset():
+    global offset, start_index
+    offset += 100
+    start_index += 100
+
+
+def reset_offset():
+    global offset, start_index
+    offset = 100
+    start_index = 0
+
+
 def home(request):
     global last_request
     last_request = request
@@ -38,49 +55,47 @@ def home(request):
 
 
 def load_initial_data(request):
-    global last_request
-    last_request = request
+    global last_request, is_sorted
+    is_sorted = False
+    if request.path != '/get_more_results/':
+        last_request = request
+        reset_offset()
     print(request)
     print("load_initial_data")
     query = ""
     if request.method == 'GET':
-        global start_index
-        query_result = Lek.objects.all()[:offset]
-        start_index += offset
+        query_result = Lek.objects.all().order_by('pk')[start_index:offset]
         serialized_query = LekSerializer(query_result, many='True').data
         context = {  # create context for JSON response
             'query': query,
             'query_result': serialized_query
         }
-        global current_results  # update current results
-        current_results = {
-            'query': query,
-            'query_result': query_result
-        }
         return JsonResponse(context, safe=False)
 
 
 def search_results(request):
-    global last_request
-    last_request = request
+    global last_request, is_sorted
+    if request.path != '/get_more_results/':
+        last_request = request
+        reset_offset()
+    else:
+        request = last_request
+
     print("In search result")
     search_vec = SearchVector("nazwa_leku", "substancja_czynna", "postac", "dawka_leku", "zawartosc_opakowania",
                               "identyfikator_leku", "refundacje__zakres_wskazan",
                               "refundacje__zakres_wskazan_pozarejestracyjnych",
                               "refundacje__poziom_odplatnosci", "refundacje__wysokosc_doplaty")
     query = request.GET.get('query')
+    print(query)
     if request.method == 'GET':
-        query_result = Lek.objects.annotate(search=search_vec).filter(search__icontains=query)[:offset]  # filter the database
+        query_result = Lek.objects.annotate(search=search_vec).\
+                           filter(search__icontains=query).order_by('pk')[start_index:offset]  # filter the database
         serialized_query = LekSerializer(query_result, many='True').data
         print(serialized_query)
         context = {  # create context for JSON response
             'query': query,
             'query_result': serialized_query
-        }
-        global current_results  # update current results
-        current_results = {
-            'query': query,
-            'query_result': query_result
         }
         return JsonResponse(context, safe=False)
     else:
@@ -90,59 +105,66 @@ def search_results(request):
             'query': query,
             'query_result': serialized_query
         }
-        current_results = {
-            'query': query,
-            'query_result': query_result
-        }
         print(context)
         return render(request, 'DrugSearch/leki.html', context)
 
 
 def sort_results(request):
-    global last_request
-    last_request = request
+    global last_request, sort_request, is_sorted, start_index
+    reset_table = False
+    if request.path == "/sort_results/":
+        reset_offset()
+        reset_table = True
+
+    elif request.path == "/get_more_results/":
+        reset_table = False
+        request = last_request
+
     search_vec = SearchVector("nazwa_leku", "substancja_czynna", "postac", "dawka_leku", "zawartosc_opakowania",
                               "identyfikator_leku", "refundacje__zakres_wskazan",
                               "refundacje__zakres_wskazan_pozarejestracyjnych",
                               "refundacje__poziom_odplatnosci", "refundacje__wysokosc_doplaty")
-    print("sorting")
-    print(request)
+
     sort_by_key = request.GET.get("sort_by")
     sort_by_dir = request.GET.get("sort_direction")
     query = request.GET.get("query")
+    last_request = request
     if request.method == 'GET':
         if query == "":
             if sort_by_dir == 'descending':
-                sorted_results = Lek.objects.all().order_by('-'+sort_by_key)[:offset]
+                sorted_results = Lek.objects.all().order_by('-'+sort_by_key, 'pk')[start_index:offset]
             else:
-                sorted_results = Lek.objects.all().order_by(sort_by_key)[:offset]
+                sorted_results = Lek.objects.all().order_by(sort_by_key, 'pk')[start_index:offset]
         else:
             if sort_by_dir == 'descending':
-                sorted_results = Lek.objects.annotate(search=search_vec).filter(search__icontains=query).order_by('-'+sort_by_key)[:offset]  # filter the database
+                sorted_results = Lek.objects.annotate(search=search_vec).\
+                                     filter(search__icontains=query).\
+                                     order_by('-'+sort_by_key, 'pk')[start_index:offset]  # filter the database
             else:
-                sorted_results = Lek.objects.annotate(search=search_vec).filter(search__icontains=query).order_by(sort_by_key)[:offset]  # filter the database
+                sorted_results = Lek.objects.annotate(search=search_vec).\
+                                     filter(search__icontains=query).\
+                                     order_by(sort_by_key, 'pk')[start_index:offset]  # filter the database
 
         serialized_query = LekSerializer(sorted_results, many='True').data
         context = {  # create context for JSON response
             'query': query,
-            'query_result': serialized_query
+            'query_result': serialized_query,
+            'reset_table': reset_table
         }
+        is_sorted = True
         return JsonResponse(context, safe=False)
 
 
 def get_more_results(request):
-    query = request.GET.get('query')
-    global start_index
-    result = Lek.objects.all()[start_index:offset]
-    start_index += offset
-    serialized_query = LekSerializer(result, many='True').data
-    context = {  # create context for JSON response
-        'query': query,
-        'query_result': serialized_query
-    }
-    global current_results  # update current results
-    current_results = {
-        'query': query,
-        'query_result': result
-    }
-    return JsonResponse(context, safe=False)
+    print(last_request)
+    update_offset()
+    if last_request.path == "/load_initial_data/":
+        print("get more after load initial data")
+        return load_initial_data(request)
+    elif last_request.path == "/sort_results/":
+        print("get more after sort_results")
+        return sort_results(request)
+    elif last_request.path == "/search_results/":
+        print("get more after search_results")
+        return search_results(request)
+    return JsonResponse({}, safe=False)

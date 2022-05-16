@@ -127,8 +127,8 @@
     </table>
 </div>
 <div class="guziki">
-    <button class="guzik">pokaż więcej wierszy</button>
-    <button class="guzik">pokaż wszystkie wiersze</button>
+    <button class="guzik" id="getMoreElementsButton">pokaż więcej wierszy</button>
+    <button class="guzik" id="getAllElementsButton">pokaż wszystkie wiersze</button>
 </div>
 
 
@@ -137,7 +137,6 @@
 {% block scripts %}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
     <script type="text/javascript">
-    
     function addResults(x, table) {
         let index = 1;
         let tr = document.createElement('tr');
@@ -266,6 +265,27 @@
                 console.log('ERROR')
             }
             })
+        })
+    </script>
+    <script type="text/javascript">
+        document.getElementById("getMoreElementsButton").addEventListener("click", function (x) {
+            $.ajax({
+            type: 'GET',
+            url: "/get_more_results/",
+            success: function (response) {
+                alert("UDAŁO SIĘ")
+                let data = response['query_result'];
+                var table = document.getElementById('resultTable').getElementsByTagName('tbody')[0];
+                for (i in data) {
+                    x = data[i];
+                    addResults(x, table);
+                }
+            },
+            error: function (response) {
+                alert("NIE UDALO SIE")
+                console.log('ERROR')
+            }
+        })
         })
     </script>
 {% endblock %}
