@@ -138,35 +138,36 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
     <script type="text/javascript">
     function addResults(x, table) {
+
         let index = 1;
+        let refsize = x.refundacje.length;
+        console.log(refsize);
         let tr = document.createElement('tr');
         let id = document.createElement(`td`);
         id.setAttribute("id", `id${index}`);
         id.setAttribute("class", "ref");
+        id.setAttribute("rowspan", `${refsize}`);
+
         index += 1;
-        /*
-        for (let refundacja of x.refundacje) {
-            let id_row = document.createElement('div');
-            id_row.setAttribute("class", "id_row");
-            id_row.innerText = x.id;
-            id.appendChild(id_row);
-        }
-        */
         id.innerText = x.id;
         tr.appendChild(id);
+
+        // Tworzenie pierwszego wiersza, tego z rowspan
         for (let elem of ['nazwa_leku', 'substancja_czynna', 'postac', 'dawka_leku', 'zawartosc_opakowania', 'identyfikator_leku']) {
             let td = document.createElement(`td`);
             td.setAttribute("id", `id${index}`);
+            td.setAttribute("rowspan", `${refsize}`);
             index += 1;
             td.innerText = x[`${elem}`];
             tr.appendChild(td);
         }
+
         for (let elem of ['zakres_wskazan', 'zakres_wskazan_pozarejestracyjnych', 'poziom_odplatnosci', 'wysokosc_doplaty']) {
             let td = document.createElement(`td`);
             td.setAttribute("id", `id${index}`);
             td.setAttribute("class", "ref");
-            index += 1;
-            for (let refundacja of x.refundacje) {
+            //index += 1;
+            let refundacja = x.refundacje[0];
                 let elem_row = document.createElement('div');
                 elem_row.setAttribute("class", "id_row");
                 elem_row.innerText = refundacja[`${elem}`];
@@ -174,10 +175,32 @@
                     elem_row.innerText = "\n\n\n";
                 }
                 td.appendChild(elem_row);
-            }
+
             tr.appendChild(td);
         }
         table.appendChild(tr);
+
+        // Dodawanie pozostałych wierszy
+        let resztaRefundacji = x.refundacje.slice(1);
+
+        for(let refundacja of resztaRefundacji) {
+            tr = document.createElement('tr');
+            //index += 1;  //trochenie rozumiem co tu robi index
+            for (let elem of ['zakres_wskazan', 'zakres_wskazan_pozarejestracyjnych', 'poziom_odplatnosci', 'wysokosc_doplaty']) {
+                td = document.createElement(`td`);
+                td.setAttribute("id", `id${index}`);
+                td.setAttribute("class", "ref");
+                let elem_row = document.createElement('div');
+                elem_row.setAttribute("class", "id_row");
+                elem_row.innerText = refundacja[`${elem}`];
+                if (!elem_row.innerText) {
+                    elem_row.innerText = "\n\n\n";
+                }
+                td.appendChild(elem_row);
+                tr.appendChild(td);
+            }
+            table.appendChild(tr);
+        }
     }
 
     document.getElementById("searchForm").addEventListener("submit", x => {
@@ -190,7 +213,6 @@
                 query: queryString
             },
             success: function (response) {
-                alert("UDAŁO SIĘ")
                 let resultDiv = document.getElementById("responseFetch");
                 let data = response['query_result'];
                 var first = data[0];
@@ -203,7 +225,7 @@
                 }
             },
             error: function (response) {
-                alert("NIE UDALO SIE")
+                alert("Upsss.. coś poszło nie tak, spróbuj ponownie")
                 console.log('ERROR')
             }
         })
@@ -224,7 +246,6 @@
                         sort_by: event.target.id
                     },
                     success: function (response) {
-                        alert("UDAŁO SIĘ")
                         let resultDiv = document.getElementById("responseFetch");
                         let data = response['query_result'];
                         console.log(data);
@@ -236,7 +257,7 @@
                         }
                     },
                     error: function (response) {
-                        alert("NIE UDALO SIE")
+                        alert("Upsss.. coś poszło nie tak, spróbuj ponownie")
                         console.log('ERROR')
                     }
                 })    
@@ -250,7 +271,6 @@
             type: 'GET',
             url: "/load_initial_data/",
             success: function (response) {
-                alert("UDAŁO SIĘ")
                 let data = response['query_result'];
                 var first = data[0];
                 console.log(first);
@@ -261,7 +281,7 @@
                 }
             },
             error: function (response) {
-                alert("NIE UDALO SIE")
+                alert("Upsss.. coś poszło nie tak, spróbuj ponownie")
                 console.log('ERROR')
             }
             })
@@ -273,7 +293,6 @@
             type: 'GET',
             url: "/get_more_results/",
             success: function (response) {
-                alert("UDAŁO SIĘ")
                 let data = response['query_result'];
                 var table = document.getElementById('resultTable').getElementsByTagName('tbody')[0];
                 for (i in data) {
@@ -282,7 +301,7 @@
                 }
             },
             error: function (response) {
-                alert("NIE UDALO SIE")
+                alert("Upsss.. coś poszło nie tak, spróbuj ponownie")
                 console.log('ERROR')
             }
         })
@@ -297,7 +316,6 @@
               load_all: false
             },
             success: function (response) {
-                alert("UDAŁO SIĘ")
                 let data = response['query_result'];
                 var table = document.getElementById('resultTable').getElementsByTagName('tbody')[0];
                 for (i in data) {
@@ -306,7 +324,7 @@
                 }
             },
             error: function (response) {
-                alert("NIE UDALO SIE")
+                alert("Upsss.. coś poszło nie tak, spróbuj ponownie")
                 console.log('ERROR')
             }
         })
@@ -321,7 +339,6 @@
               load_all: true
             },
             success: function (response) {
-                alert("UDAŁO SIĘ")
                 let data = response['query_result'];
                 var table = document.getElementById('resultTable').getElementsByTagName('tbody')[0];
                 for (i in data) {
@@ -330,7 +347,7 @@
                 }
             },
             error: function (response) {
-                alert("NIE UDALO SIE")
+                alert("Upsss.. coś poszło nie tak, spróbuj ponownie")
                 console.log('ERROR')
             }
         })
