@@ -288,4 +288,52 @@
         })
         })
     </script>
+    <script type="text/javascript">
+        document.getElementById("getMoreElementsButton").addEventListener("click", function (x) {
+            $.ajax({
+            type: 'GET',
+            url: "/get_more_results/",
+            data: {
+              load_all: false
+            },
+            success: function (response) {
+                alert("UDAŁO SIĘ")
+                let data = response['query_result'];
+                var table = document.getElementById('resultTable').getElementsByTagName('tbody')[0];
+                for (i in data) {
+                    x = data[i];
+                    addResults(x, table);
+                }
+            },
+            error: function (response) {
+                alert("NIE UDALO SIE")
+                console.log('ERROR')
+            }
+        })
+        })
+    </script>
+    <script type="text/javascript">
+        document.getElementById("getAllElementsButton").addEventListener("click", function (x) {
+            $.ajax({
+            type: 'GET',
+            url: "/get_more_results/",
+            data: {
+              load_all: true
+            },
+            success: function (response) {
+                alert("UDAŁO SIĘ")
+                let data = response['query_result'];
+                var table = document.getElementById('resultTable').getElementsByTagName('tbody')[0];
+                for (i in data) {
+                    x = data[i];
+                    addResults(x, table);
+                }
+            },
+            error: function (response) {
+                alert("NIE UDALO SIE")
+                console.log('ERROR')
+            }
+        })
+        })
+    </script>
 {% endblock %}
