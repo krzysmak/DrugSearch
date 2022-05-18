@@ -142,6 +142,41 @@
         let index = 1;
         let refsize = x.refundacje.length;
         //console.log(refsize);
+        if (refsize == 0) {
+            let tr = document.createElement('tr');
+            let id = document.createElement(`td`);
+            id.setAttribute("id", `id${index}`);
+            id.setAttribute("class", "ref");
+            index += 1;
+            id.innerText = x.id;
+            tr.appendChild(id);
+            for (let elem of ['nazwa_leku', 'substancja_czynna', 'postac', 'dawka_leku', 'zawartosc_opakowania', 'identyfikator_leku']) {
+                let td = document.createElement(`td`);
+                td.setAttribute("id", `id${index}`);
+                index += 1;
+                td.innerText = x[`${elem}`];
+                tr.appendChild(td);
+            }
+            for (let elem of ['zakres_wskazan', 'zakres_wskazan_pozarejestracyjnych', 'poziom_odplatnosci', 'wysokosc_doplaty']) {
+                let td = document.createElement(`td`);
+                td.innerHTML = ""
+                td.setAttribute("id", `id${index}`);
+                td.setAttribute("class", "ref");
+                index += 1;
+                //for (let refundacja of x.refundacje) {
+                //    let elem_row = document.createElement('div');
+                //    elem_row.setAttribute("class", "id_row");
+                    //elem_row.innerText = refundacja[`${elem}`];
+                    //if (!elem_row.innerText) {
+                    //    elem_row.innerText = "\n\n\n";
+                    //}
+                    //td.appendChild(elem_row);
+            }
+            tr.appendChild(td);
+            table.appendChild(tr);
+            return;
+        }
+            
         let tr = document.createElement('tr');
         let id = document.createElement(`td`);
         id.setAttribute("id", `id${index}`);

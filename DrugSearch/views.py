@@ -94,17 +94,43 @@ def search_results(request):
     query = request.GET.get('query')
     #print(query)
     if request.method == 'GET':
-        query_result = Lek.objects.annotate(search=search_vec).\
-                           filter(search__icontains=query).order_by('pk')[start_index:offset]  # filter the database
+        if (query != ""):
+            helper_result = Lek.objects.annotate(search=search_vec).\
+                            filter(search__icontains=query).order_by('pk')[start_index:]
+        else:
+            helper_result = Lek.objects.all().order_by('pk')[start_index:]
+        query_result = []
+        to_add = offset - start_index
+        prev_i = 0
+        for i in (helper_result):
+            if (to_add <= 0):
+                break
+            if (prev_i == 0 or i.identyfikator_leku != prev_i.identyfikator_leku):
+                query_result.append(i)
+                to_add -= 1
+                prev_i = i    
         serialized_query = LekSerializer(query_result, many='True').data
-        #print(serialized_query)
         context = {  # create context for JSON response
             'query': query,
             'query_result': serialized_query
         }
         return JsonResponse(context, safe=False)
     else:
-        query_result = Lek.objects.all()
+        if (query != ""):
+            helper_result = Lek.objects.annotate(search=search_vec).\
+                            filter(search__icontains=query).order_by('pk')[start_index:]
+        else:
+            helper_result = Lek.objects.all().order_by('pk')[start_index:]
+        query_result = []
+        to_add = offset - start_index
+        prev_i = 0
+        for i in (helper_result):
+            if (to_add <= 0):
+                break
+            if (prev_i == 0 or i.identyfikator_leku != prev_i.identyfikator_leku):
+                query_result.append(i)
+                to_add -= 1
+                prev_i = i    
         serialized_query = LekSerializer(query_result, many='True').data
         context = {
             'query': query,
@@ -137,20 +163,38 @@ def sort_results(request):
     if request.method == 'GET':
         if query == "":
             if sort_by_dir == 'descending':
-                sorted_results = Lek.objects.all().order_by('-'+sort_by_key, 'pk')[start_index:offset]
+                helper_result = Lek.objects.all().order_by('-'+sort_by_key, 'pk')[start_index:]
             else:
-                sorted_results = Lek.objects.all().order_by(sort_by_key, 'pk')[start_index:offset]
+                helper_result = Lek.objects.all().order_by(sort_by_key, 'pk')[start_index:]
         else:
             if sort_by_dir == 'descending':
-                sorted_results = Lek.objects.annotate(search=search_vec).\
+                if (query != ""):
+                    helper_result = Lek.objects.annotate(search=search_vec).\
                                      filter(search__icontains=query).\
-                                     order_by('-'+sort_by_key, 'pk')[start_index:offset]  # filter the database
+                                     order_by('-'+sort_by_key, 'pk')[start_index:]  # filter the database
+                else:
+                    helper_result = Lek.objects.all().\
+                                     order_by('-'+sort_by_key, 'pk')[start_index:]  # filter the database
             else:
-                sorted_results = Lek.objects.annotate(search=search_vec).\
+                if (query != ""):
+                    helper_result = Lek.objects.annotate(search=search_vec).\
                                      filter(search__icontains=query).\
-                                     order_by(sort_by_key, 'pk')[start_index:offset]  # filter the database
-
-        serialized_query = LekSerializer(sorted_results, many='True').data
+                                     order_by(sort_by_key, 'pk')[start_index:]  # filter the database
+                else:
+                    helper_result = Lek.objects.all().\
+                                     order_by(sort_by_key, 'pk')[start_index:]  # filter the database
+        query_result = []
+        to_add = offset - start_index
+        prev_i = 0
+        for i in (helper_result):
+            if (to_add <= 0):
+                break
+            if (prev_i == 0 or i.identyfikator_leku != prev_i.identyfikator_leku):
+                query_result.append(i)
+                to_add -= 1
+                prev_i = i    
+        serialized_query = LekSerializer(query_result, many='True').data
+        #print(serialized_query)
         context = {  # create context for JSON response
             'query': query,
             'query_result': serialized_query,
