@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.postgres',
     'DrugSearch.apps.TestowaConfig',
     'django_extensions',
+    'simple_deploy',
 ]
 
 MIDDLEWARE = [
