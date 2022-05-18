@@ -1,3 +1,7 @@
 Django==3.2.11
 gunicorn==20.1.0
 psycopg2==2.7
+
+django-simple-deploy          # Added by simple_deploy command.
+dj-database-url               # Added by simple_deploy command.
+whitenoise                    # Added by simple_deploy command.
