@@ -50,7 +50,7 @@ def set_max_offset():
 def home(request):
     global last_request
     last_request = request
-    print(request)
+    #print(request)
     context = {
         'query': '',
         'query_result': {}
@@ -64,8 +64,8 @@ def load_initial_data(request):
     if request.path != '/get_more_results/':
         last_request = request
         reset_offset()
-    print(request)
-    print("load_initial_data")
+    #print(request)
+    #print("load_initial_data")
     query = ""
     if request.method == 'GET':
         query_result = Lek.objects.all().order_by('pk')[start_index:offset]
@@ -74,7 +74,7 @@ def load_initial_data(request):
             'query': query,
             'query_result': serialized_query
         }
-        print("REURNED LOAD INITIAL DATA")
+        #print("REURNED LOAD INITIAL DATA")
         return JsonResponse(context, safe=False)
 
 
@@ -86,18 +86,18 @@ def search_results(request):
     else:
         request = last_request
 
-    print("In search result")
+    #print("In search result")
     search_vec = SearchVector("nazwa_leku", "substancja_czynna", "postac", "dawka_leku", "zawartosc_opakowania",
                               "identyfikator_leku", "refundacje__zakres_wskazan",
                               "refundacje__zakres_wskazan_pozarejestracyjnych",
                               "refundacje__poziom_odplatnosci", "refundacje__wysokosc_doplaty")
     query = request.GET.get('query')
-    print(query)
+    #print(query)
     if request.method == 'GET':
         query_result = Lek.objects.annotate(search=search_vec).\
                            filter(search__icontains=query).order_by('pk')[start_index:offset]  # filter the database
         serialized_query = LekSerializer(query_result, many='True').data
-        print(serialized_query)
+        #print(serialized_query)
         context = {  # create context for JSON response
             'query': query,
             'query_result': serialized_query
@@ -110,7 +110,7 @@ def search_results(request):
             'query': query,
             'query_result': serialized_query
         }
-        print(context)
+        #print(context)
         return render(request, 'DrugSearch/leki.html', context)
 
 
@@ -161,22 +161,22 @@ def sort_results(request):
 
 
 def get_more_results(request):
-    print(last_request)
+    #print(last_request)
     query = request.GET.get('load_all')
     if query:
         update_offset()
         set_max_offset()
-        print("LOAD_ALL_ELEMENTS")
+        #print("LOAD_ALL_ELEMENTS")
     else:
         update_offset()
     if last_request.path == "/load_initial_data/":
-        print("get more after load initial data")
+        #print("get more after load initial data")
         return load_initial_data(request)
     elif last_request.path == "/sort_results/":
-        print("get more after sort_results")
+        #print("get more after sort_results")
         return sort_results(request)
     elif last_request.path == "/search_results/":
-        print("get more after search_results")
+        #print("get more after search_results")
         return search_results(request)
     return JsonResponse({}, safe=False)
 

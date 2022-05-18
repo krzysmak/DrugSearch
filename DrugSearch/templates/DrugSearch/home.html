@@ -141,7 +141,7 @@
 
         let index = 1;
         let refsize = x.refundacje.length;
-        console.log(refsize);
+        //console.log(refsize);
         let tr = document.createElement('tr');
         let id = document.createElement(`td`);
         id.setAttribute("id", `id${index}`);
@@ -216,7 +216,7 @@
                 let resultDiv = document.getElementById("responseFetch");
                 let data = response['query_result'];
                 var first = data[0];
-                console.log(first);
+                //console.log(first);
                 var table = document.getElementById('resultTable').getElementsByTagName('tbody')[0];
                 table.innerHTML = "";
                 for (i in data) {
@@ -226,7 +226,7 @@
             },
             error: function (response) {
                 alert("Upsss.. coś poszło nie tak, spróbuj ponownie")
-                console.log('ERROR')
+                //console.log('ERROR')
             }
         })
     })
@@ -248,7 +248,7 @@
                     success: function (response) {
                         let resultDiv = document.getElementById("responseFetch");
                         let data = response['query_result'];
-                        console.log(data);
+                        //console.log(data);
                         var table = document.getElementById('resultTable').getElementsByTagName('tbody')[0];
                         table.innerHTML = "";
                         for (i in data) {
@@ -258,7 +258,7 @@
                     },
                     error: function (response) {
                         alert("Upsss.. coś poszło nie tak, spróbuj ponownie")
-                        console.log('ERROR')
+                        //console.log('ERROR')
                     }
                 })    
             })
@@ -273,7 +273,7 @@
             success: function (response) {
                 let data = response['query_result'];
                 var first = data[0];
-                console.log(first);
+                //console.log(first);
                 var table = document.getElementById('resultTable').getElementsByTagName('tbody')[0];
                 for (i in data) {
                     x = data[i];
@@ -282,7 +282,7 @@
             },
             error: function (response) {
                 alert("Upsss.. coś poszło nie tak, spróbuj ponownie")
-                console.log('ERROR')
+                //console.log('ERROR')
             }
             })
         })
@@ -302,7 +302,7 @@
             },
             error: function (response) {
                 alert("Upsss.. coś poszło nie tak, spróbuj ponownie")
-                console.log('ERROR')
+                //console.log('ERROR')
             }
         })
         })
@@ -325,7 +325,7 @@
             },
             error: function (response) {
                 alert("Upsss.. coś poszło nie tak, spróbuj ponownie")
-                console.log('ERROR')
+                //console.log('ERROR')
             }
         })
         })
@@ -348,7 +348,7 @@
             },
             error: function (response) {
                 alert("Upsss.. coś poszło nie tak, spróbuj ponownie")
-                console.log('ERROR')
+                //console.log('ERROR')
             }
         })
         })
